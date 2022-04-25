@@ -8,7 +8,7 @@ public class Program
         var person = new Person();
         person.name = "ABC";
 
-        var alarm = new AlarmClockEvent();
+        var alarm = new AlarmClock();
         alarm.AlarmClockEvent += person.HandleAlarm;
         alarm.Alarm();
     }
@@ -24,30 +24,31 @@ public class Person
     {
         Console.WriteLine("Time to Get up{0}", e.time);
     }
-    public class AlarmClock
+}
+public class AlarmClock
+{
+    public event MorningAlarmRingsHandeler AlarmClockEvent;
+
+    public void Alarm()
     {
-        public event MorningAlarmRingsHandeler AlarmClockEvent;
-
-        public void Alarm()
+        Console.WriteLine("Alarm went off!");
+        MorningAlarmRingsHandeler alarm = AlarmClockEvent;
+        if (alarm != null)
         {
-            Console.WriteLine("Alarm went off!");
-            MorningAlarmRingsHandeler alarm = AlarmClockEvent;
-            if (alarm != null)
-            {
-                alarm(this, new MorningAlarmArgs(DateTime.Now));
-            }
-
+            alarm(this, new MorningAlarmArgs(DateTime.Now));
         }
+
     }
+}
 
-    public delegate void MorningAlarmRingsHandeler(object source, MorningAlarmArgs e);
+public delegate void MorningAlarmRingsHandeler(object source, MorningAlarmArgs e);
 
-    public class MorningAlarmArgs : EventArgs
+public class MorningAlarmArgs : EventArgs
+{
+    public DateTime time { get; set; }
+    public MorningAlarmArgs(DateTime time)
     {
-        public DateTime time { get; set; }
-        public MorningAlarmArgs(DateTime time)
-        {
-            this.time = time;
+        this.time = time;
 
-        }
     }
+}
